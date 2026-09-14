@@ -12,26 +12,49 @@
 <link rel="stylesheet" href="./app.css" />
 </head>
 <body>
-<header><div class="head"><div><div class="title">ソウルシルバー 図鑑・育成ナビ</div><div class="subtitle">HGSS / SoulSilver・序盤～コガネ・Web v0.1</div></div><div class="timebox"><span>DS時刻の目安</span><b id="clock">--:--</b><span id="period">--</span></div></div></header>
+<header><div class="head"><div><div class="title">ソウルシルバー 図鑑・育成ナビ</div><div class="subtitle">HGSS / SoulSilver・序盤～コガネ・Web v0.2</div></div><div class="timebox"><span>DS時刻の目安</span><b id="clock">--:--</b><span id="period">--</span></div></div></header>
 <main>
-<section class="hero"><h1>捕獲と育成を、進行度に合わせて。</h1><p>出現率・時間帯・レベル・捕獲係数・概算経験値をまとめて確認。捕まえたポケモンは端末内に保存されます。</p><div class="hero-row"><div class="stat"><span>収録エリア</span><b id="areaCount">0</b></div><div class="stat"><span>ユニーク種</span><b id="speciesCount">0</b></div><div class="stat"><span>捕獲済み</span><b id="caughtCount">0</b></div><div class="stat"><span>現在の時間帯</span><b id="periodHero">--</b></div></div></section>
-<div class="tabs"><button class="tab active" data-tab="now">今狙える</button><button class="tab" data-tab="dex">出現図鑑</button><button class="tab" data-tab="exp">レベル上げ</button></div>
+<section class="hero"><h1>捕獲・育成・手持ち管理をひとまとめに。</h1><p>出現率・時間帯・経験値に加え、「狙わない」除外、旅パおすすめ度、捕獲済みポケモンの育成メモを端末内に保存できます。</p><div class="hero-row"><div class="stat"><span>収録エリア</span><b id="areaCount">0</b></div><div class="stat"><span>ユニーク種</span><b id="speciesCount">0</b></div><div class="stat"><span>捕獲済み</span><b id="caughtCount">0</b></div><div class="stat"><span>現在の時間帯</span><b id="periodHero">--</b></div></div></section>
+<div class="tabs four"><button class="tab active" data-tab="now">今狙える</button><button class="tab" data-tab="dex">出現図鑑</button><button class="tab" data-tab="exp">育成</button><button class="tab" data-tab="manage">手持ち管理</button></div>
 <section id="now" class="panel active">
   <div class="box"><h2>現在の進行度</h2><select id="progressSelect"></select><div class="notice" id="progressNote" style="margin-top:9px"></div></div>
   <div class="tip" id="todayTip"></div>
-  <div class="section-title">未捕獲で、今の時間帯に出るポケモン</div><div id="nowCards" class="cards"></div>
+  <div class="section-title">未捕獲・未除外で、今の時間帯に出るポケモン</div><div id="nowCards" class="cards"></div>
 </section>
 <section id="dex" class="panel">
-  <div class="box"><h2>検索・絞り込み</h2><div class="controls"><input id="search" class="wide" type="search" placeholder="ポケモン名 / 場所を検索"><select id="locationFilter"><option value="all">すべての場所</option></select><select id="methodFilter"><option value="all">すべての方法</option></select><select id="timeFilter"><option value="all">全時間帯</option><option value="current">現在の時間帯</option><option value="morning">朝</option><option value="day">昼</option><option value="night">夜</option></select></div><label class="switch"><input type="checkbox" id="uncaughtOnly"> 未捕獲だけ表示</label></div>
+  <div class="box"><h2>検索・絞り込み</h2><div class="controls"><input id="search" class="wide" type="search" placeholder="ポケモン名 / 場所を検索"><select id="locationFilter"><option value="all">すべての場所</option></select><select id="methodFilter"><option value="all">すべての方法</option></select><select id="timeFilter"><option value="all">全時間帯</option><option value="current">現在の時間帯</option><option value="morning">朝</option><option value="day">昼</option><option value="night">夜</option></select></div><div class="toggle-row"><label class="switch"><input type="checkbox" id="uncaughtOnly"> 未捕獲だけ</label><label class="switch"><input type="checkbox" id="hideExcluded" checked> 除外済みを隠す</label></div></div>
+  <div class="legend"><span class="rec rec-top">★★★ 最有力</span><span class="rec rec-good">★★ 有力</span><span class="rec rec-utility">便利</span><span class="rec rec-okay">★ 候補</span><span class="rec rec-dex">図鑑向け</span><small>旅パ攻略効率の目安です。</small></div>
   <div id="dexCards" class="cards"></div>
 </section>
 <section id="exp" class="panel">
+  <div class="box"><h2>育成おすすめ</h2><div class="notice">旅パで育てる価値が高いポケモンを、現在の進行度までに入手できる範囲から優先表示します。進化後の性能・攻略相性・育成のしやすさを総合した目安です。</div><div id="recommendList" class="recommend-grid" style="margin-top:10px"></div></div>
   <div class="box"><h2>野生ポケモン 経験値ランキング</h2><div class="notice"><strong>概算EXP</strong> = 第4世代の基礎経験値 × 平均Lv ÷ 7。野生を1匹だけで倒し、しあわせタマゴ・交換補正・がくしゅうそうち等なしの目安です。出現率も併記します。</div><label class="switch"><input type="checkbox" id="expCurrent" checked> 現在の進行度までに限定</label><div id="expRank" style="margin-top:7px"></div></div>
   <div class="box"><h2>育成方針</h2><div id="levelAdvice" class="notice"></div></div>
 </section>
-<div class="box"><h2>捕獲チェック</h2><div><span id="caughtProgressText" class="pill">0 / 0</span></div><div class="progressbar"><i id="caughtBar" style="width:0%"></i></div><div class="btnrow"><button class="btn" id="exportBtn">チェックを書き出す</button><button class="btn danger" id="resetBtn">チェックをリセット</button></div></div>
-<div class="footer">データ範囲: ワカバ～36番道路・しぜんこうえん（全国図鑑前のむしとりたいかいを含む）。出現データは主にSerebii Pokéarth / BulbapediaのHGSS Gen IV情報を照合して収録。捕獲係数は3～255のゲーム内部値で、実際の捕獲成功率は残りHP・状態異常・ボール等で変化します。ずつきは木グループによって出現テーブルが変わります。</div>
+<section id="manage" class="panel">
+  <div class="box"><h2>捕獲済みポケモンの状態</h2><div class="notice">捕獲済みにしたポケモンへ、Lv・所属・性格・特性・持ち物・メモを保存できます。データはこのSafari端末内に保存されます。</div><div class="manage-controls"><input id="manageSearch" type="search" placeholder="捕獲済みポケモンを検索"><select id="manageStatus"><option value="all">状態：すべて</option><option value="手持ち">手持ち</option><option value="育成予定">育成予定</option><option value="進化待ち">進化待ち</option><option value="ボックス">ボックス</option><option value="交換予定">交換予定</option><option value="図鑑用">図鑑用</option></select></div></div>
+  <div id="manageCards" class="manage-list"></div>
+  <div class="box"><h2>狙わないポケモン</h2><div class="notice">「狙わない」にしたポケモンは「今狙える」から除外されます。ここからいつでも解除できます。</div><div id="excludedList" class="excluded-list"></div></div>
+</section>
+<div class="box"><h2>保存データ</h2><div><span id="caughtProgressText" class="pill">0 / 0</span> <span id="excludedText" class="pill muted-pill">除外 0</span></div><div class="progressbar"><i id="caughtBar" style="width:0%"></i></div><div class="btnrow"><button class="btn" id="exportBtn">データを書き出す</button><button class="btn danger" id="resetBtn">捕獲チェックをリセット</button></div></div>
+<div class="footer">データ範囲: ワカバ～36番道路・しぜんこうえん（全国図鑑前のむしとりたいかいを含む）。捕獲係数はゲーム内部値で、実際の捕獲成功率は残りHP・状態異常・ボール等で変化します。育成おすすめ度は旅パ攻略効率の目安で、好きなポケモンの使用を否定するものではありません。</div>
 </main>
+<dialog id="pokeDialog" class="poke-dialog">
+<form id="pokeForm" method="dialog">
+  <div class="dialog-head"><div><small>捕獲済みポケモン</small><h2 id="dialogName">ポケモン</h2></div><button type="button" class="icon-btn" id="closeDialog" aria-label="閉じる">×</button></div>
+  <input type="hidden" id="editSpecies">
+  <div class="form-grid">
+    <label>ニックネーム<input id="editNickname" type="text" placeholder="任意"></label>
+    <label>現在Lv<input id="editLevel" type="number" min="1" max="100" inputmode="numeric" placeholder="例 18"></label>
+    <label>状態<select id="editStatus"><option value="">未設定</option><option>手持ち</option><option>育成予定</option><option>進化待ち</option><option>ボックス</option><option>交換予定</option><option>図鑑用</option></select></label>
+    <label>性格<input id="editNature" type="text" placeholder="例 いじっぱり"></label>
+    <label>特性<input id="editAbility" type="text" placeholder="例 こんじょう"></label>
+    <label>持ち物<input id="editItem" type="text" placeholder="任意"></label>
+    <label class="full">メモ<textarea id="editMemo" rows="4" placeholder="技構成、進化予定、使用感など"></textarea></label>
+  </div>
+  <div class="dialog-actions"><button type="button" class="btn" id="clearRecord">記録を消す</button><button type="submit" class="btn primary">保存</button></div>
+</form>
+</dialog>
 <script src="./data.js"></script>
 <script src="./app.js"></script>
 <script>
